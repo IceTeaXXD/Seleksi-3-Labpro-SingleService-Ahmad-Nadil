@@ -24,23 +24,23 @@ func main() {
 
 	// POST
 	r.POST("/login", controllers.Login)
-	// r.POST("/barang", controllers.CreateBarang)
-	// r.post("/perusahaan", controllers.CreatePerusahaan)
+	r.POST("/barang", controllers.CreateBarang)
+	r.POST("/perusahaan", controllers.CreatePerusahaan)
 
 	// // GET
 	r.GET("/self", controllers.GetSelf)
 	r.GET("/barang", controllers.GetBarang)
-	// r.GET("/barang/:id", controllers.GetBarangByID)
+	r.GET("/barang/:id", controllers.GetBarangByID)
 	r.GET("/perusahaan", controllers.GetPerusahaan)
-	// r.get("/perusahaan/:id", controllers.GetPerusahaanByID)
+	r.GET("/perusahaan/:id", controllers.GetPerusahaanByID)
 
 	// // DELETE
-	// r.DELETE("/barang/:id", controllers.DeleteBarang)
-	// r.DELETE("/perusahaan/:id", controllers.DeletePerusahaan)
+	r.DELETE("/barang/:id", controllers.DeleteBarang)
+	r.DELETE("/perusahaan/:id", controllers.DeletePerusahaan)
 
 	// // PUT
-	// r.PUT("/barang/:id", controllers.UpdateBarang)
-	// r.PUT("/perusahaan/:id", controllers.UpdatePerusahaan)
+	r.PUT("/barang/:id", controllers.UpdateBarang)
+	r.PUT("/perusahaan/:id", controllers.UpdatePerusahaan)
 
 	r.Run()
 }

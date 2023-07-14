@@ -74,6 +74,38 @@ func GetBarang(c *gin.Context) {
     })
 }
 
+func GetBarangByID(c *gin.Context) {
+    // retrieve barang ID from request
+    barangID := c.Param("id")
+
+    // retrieve barang from database
+    var barang model.Barang
+    result := initializers.DB.First(&barang, barangID)
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "error",
+            "message": "Failed to retrieve barang",
+            "data":    nil,
+        })
+        return
+    }
+
+    // return barang data
+    data := gin.H{
+        "id":            barang.ID,
+        "nama":          barang.Nama,
+        "harga":         barang.Harga,
+        "stok":          barang.Stok,
+        "kode":          barang.KodeBarang,
+        "perusahaan_id": barang.PerusahaanID,
+    }
+    c.JSON(http.StatusOK, gin.H{
+        "status":  "success",
+        "message": "Barang retrieved successfully",
+        "data":    data,
+    })
+}
+
 func GetPerusahaan(c *gin.Context) {
     // get query parameters
     q := c.Query("q")
@@ -104,6 +136,37 @@ func GetPerusahaan(c *gin.Context) {
             "no_telp": perusahaan.NoTelepon,
             "kode":    perusahaan.KodePajak,
         })
+    }
+    c.JSON(http.StatusOK, gin.H{
+        "status":  "success",
+        "message": "Perusahaan retrieved successfully",
+        "data":    data,
+    })
+}
+
+func GetPerusahaanByID(c *gin.Context) {
+    // retrieve perusahaan ID from request
+    perusahaanID := c.Param("id")
+
+    // retrieve perusahaan from database
+    var perusahaan model.Perusahaan
+    result := initializers.DB.First(&perusahaan, perusahaanID)
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "error",
+            "message": "Failed to retrieve perusahaan",
+            "data":    nil,
+        })
+        return
+    }
+
+    // return perusahaan data
+    data := gin.H{
+        "id":      perusahaan.ID,
+        "nama":    perusahaan.Nama,
+        "alamat":  perusahaan.Alamat,
+        "no_telp": perusahaan.NoTelepon,
+        "kode":    perusahaan.KodePajak,
     }
     c.JSON(http.StatusOK, gin.H{
         "status":  "success",
