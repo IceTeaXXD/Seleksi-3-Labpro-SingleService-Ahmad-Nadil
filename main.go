@@ -18,29 +18,33 @@ func main() {
 	// Add CORS middleware
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"https://chatakudong.vercel.app","http://localhost:3000", "https://ohl-fe.vercel.app"},
-		AllowMethods: []string{"GET", "POST", "DELETE", "PUT"},
+		AllowMethods: []string{"GET", "POST", "DELETE", "PUT", "OPTIONS"},
 		AllowHeaders: []string{"Origin", "Content-Type"},
 	}))
 
+	
 	// POST
 	r.POST("/login", controllers.Login)
 	r.POST("/barang", controllers.CreateBarang)
 	r.POST("/perusahaan", controllers.CreatePerusahaan)
-
-	// // GET
+	
+	// GET
 	r.GET("/self", controllers.GetSelf)
 	r.GET("/barang", controllers.GetBarang)
 	r.GET("/barang/:id", controllers.GetBarangByID)
 	r.GET("/perusahaan", controllers.GetPerusahaan)
 	r.GET("/perusahaan/:id", controllers.GetPerusahaanByID)
-
-	// // DELETE
+	
+	// DELETE
 	r.DELETE("/barang/:id", controllers.DeleteBarang)
 	r.DELETE("/perusahaan/:id", controllers.DeletePerusahaan)
-
-	// // PUT
+	
+	// PUT
 	r.PUT("/barang/:id", controllers.UpdateBarang)
 	r.PUT("/perusahaan/:id", controllers.UpdatePerusahaan)
+
+	// OPTIONS
+	r.OPTIONS("/login", controllers.LoginOptions)
 
 	r.Run()
 }
