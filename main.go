@@ -24,6 +24,7 @@ func main() {
 
 	// POST
 	r.POST("/login", controllers.Login)
+	r.GET("/self", controllers.GetSelf)
 	// r.POST("/barang", controllers.CreateBarang)
 	// r.post("/perusahaan", controllers.CreatePerusahaan)
 

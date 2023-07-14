@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"singleservice/initializers"
+	model "singleservice/models"
 	"net/http"
 	"github.com/dgrijalva/jwt-go"
 	"time"
@@ -82,4 +84,15 @@ func Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, resp)
+}
+
+func GetSelf(c *gin.Context) {
+	fmt.Println("GetSelf")
+	// get all user from database
+	var users []model.User
+	initializers.DB.Find(&users)
+
+	c.JSON(200, gin.H{
+		"users": users,
+	})
 }
