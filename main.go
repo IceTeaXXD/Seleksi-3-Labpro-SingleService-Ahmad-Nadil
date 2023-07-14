@@ -24,15 +24,14 @@ func main() {
 
 	// POST
 	r.POST("/login", controllers.Login)
-	r.GET("/self", controllers.GetSelf)
 	// r.POST("/barang", controllers.CreateBarang)
 	// r.post("/perusahaan", controllers.CreatePerusahaan)
 
 	// // GET
-	// r.GET("/self", controllers.GetSelf)
-	// r.GET("/barang", controllers.GetBarang)
+	r.GET("/self", controllers.GetSelf)
+	r.GET("/barang", controllers.GetBarang)
 	// r.GET("/barang/:id", controllers.GetBarangByID)
-	// r.get("/perusahaan", controllers.GetPerusahaan)
+	r.GET("/perusahaan", controllers.GetPerusahaan)
 	// r.get("/perusahaan/:id", controllers.GetPerusahaanByID)
 
 	// // DELETE
