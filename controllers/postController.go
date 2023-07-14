@@ -44,42 +44,42 @@ func generateToken(username string) string {
 
 func Login(c *gin.Context) {
 	fmt.Println("Login")
-	// var req LoginRequest
-	// if err := c.ShouldBindJSON(&req); err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": "Invalid request"})
-	// 	return
-	// }
+	var req LoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": "Invalid request"})
+		return
+	}
 
-	// // Authenticate user
-	// if req.Username != "admin" || req.Password != "admin" {
-	// 	c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Invalid credentials"})
-	// 	return
-	// }
+	// Authenticate user
+	if req.Username != "admin" || req.Password != "admin" {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Invalid credentials"})
+		return
+	}
 	
-	// // Generate JWT token
-	// token := generateToken(req.Username)
+	// Generate JWT token
+	token := generateToken(req.Username)
 
-	// // Prepare response
-	// resp := LoginResponse{
-	// 	Status:  "success",
-	// 	Message: "Login successful",
-	// 	Data: struct {
-	// 		User  struct {
-	// 			Username string `json:"username"`
-	// 			Name     string `json:"name"`
-	// 		} `json:"user"`
-	// 		Token string `json:"token"`
-	// 	}{
-	// 		User: struct {
-	// 			Username string `json:"username"`
-	// 			Name     string `json:"name"`
-	// 		}{
-	// 			Username: req.Username,
-	// 			Name:     "Administrator",
-	// 		},
-	// 		Token: token,
-	// 	},
-	// }
+	// Prepare response
+	resp := LoginResponse{
+		Status:  "success",
+		Message: "Login successful",
+		Data: struct {
+			User  struct {
+				Username string `json:"username"`
+				Name     string `json:"name"`
+			} `json:"user"`
+			Token string `json:"token"`
+		}{
+			User: struct {
+				Username string `json:"username"`
+				Name     string `json:"name"`
+			}{
+				Username: req.Username,
+				Name:     "Administrator",
+			},
+			Token: token,
+		},
+	}
 
-	// c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusOK, resp)
 }
