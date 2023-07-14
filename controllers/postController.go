@@ -3,6 +3,7 @@ package controllers
 import (
 	"singleservice/initializers"
 	model "singleservice/models"
+	// "singleservice/auth"
 	"net/http"
 	"github.com/dgrijalva/jwt-go"
 	"time"
@@ -46,53 +47,87 @@ func generateToken(username string) string {
 
 func Login(c *gin.Context) {
 	fmt.Println("Login")
-	var req LoginRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": "Invalid request"})
-		return
-	}
+    // get username and password from request body
+    var body struct {
+        Username string `json:"username"`
+        Password string `json:"password"`
+    }
 
-	// Authenticate user
-	if req.Username != "admin" || req.Password != "admin" {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Invalid credentials"})
-		return
-	}
+	// print username and password
+	fmt.Println("=============================")
+	fmt.Println(body.Username)
+	fmt.Println(body.Password)
+	fmt.Println("=============================")
 	
-	// Generate JWT token
-	token := generateToken(req.Username)
+    err := c.BindJSON(&body)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "status":  "error",
+            "message": "Invalid request body",
+            "data":    nil,
+        })
+        return
+    }
 
-	// Prepare response
-	resp := LoginResponse{
-		Status:  "success",
-		Message: "Login successful",
-		Data: struct {
-			User  struct {
-				Username string `json:"username"`
-				Name     string `json:"name"`
-			} `json:"user"`
-			Token string `json:"token"`
-		}{
-			User: struct {
-				Username string `json:"username"`
-				Name     string `json:"name"`
-			}{
-				Username: req.Username,
-				Name:     "Administrator",
-			},
-			Token: token,
-		},
+    // authenticate user
+	Users := []model.User{}
+	initializers.DB.Where("username = ? AND password = ?", body.Username, body.Password).Find(&Users)
+	// check if username and password match
+	if len(Users) == 0 {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status":  "error",
+			"message": "Username and password do not match",
+			"data":    nil,
+		})
+		return
 	}
 
-	c.JSON(http.StatusOK, resp)
+    // generate JWT token
+    // token, err := auth.GenerateToken(Users[0].ID)
+    // if err != nil {
+    //     c.JSON(http.StatusInternalServerError, gin.H{
+    //         "status":  "error",
+    //         "message": "Failed to generate token",
+    //         "data":    nil,
+    //     })
+    //     return
+    // }
+
+    // return user data and token
+    c.JSON(http.StatusOK, gin.H{
+        "status":  "success",
+        "message": "User authenticated successfully",
+        "data": gin.H{
+            "user": gin.H{
+                "username": Users[0].Username,
+                "name":     Users[0].Name,
+            },
+            // "token": token,
+        },
+    })
+
+	return;
 }
 
 func GetSelf(c *gin.Context) {
-	fmt.Println("GetSelf")
-	// get all user from database
-	var users []model.User
-	initializers.DB.Find(&users)
+    // get current user from context
+    user, exists := c.Get("user")
+    if !exists {
+        c.JSON(http.StatusUnauthorized, gin.H{
+            "status":  "error",
+            "message": "User not authenticated",
+            "data":    nil,
+        })
+        return
+    }
 
-	c.JSON(200, gin.H{
-		"users": users,
-	})
+    // return user data
+    c.JSON(http.StatusOK, gin.H{
+        "status":  "success",
+        "message": "User data retrieved successfully",
+        "data": gin.H{
+            "username": user.(*model.User).Username,
+            "name":     user.(*model.User).Name,
+        },
+    })
 }
