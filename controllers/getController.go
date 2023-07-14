@@ -114,7 +114,7 @@ func GetPerusahaan(c *gin.Context) {
     var perusahaans []model.Perusahaan
     query := initializers.DB
     if q != "" {
-        query = query.Where("nama LIKE ? OR kode LIKE ?", "%"+q+"%", "%"+q+"%")
+        query = query.Where("nama LIKE ? OR kode_pajak LIKE ?", "%"+q+"%", "%"+q+"%")
     }
     result := query.Find(&perusahaans)
     if result.Error != nil {
