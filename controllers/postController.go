@@ -58,7 +58,7 @@ func Login(c *gin.Context) {
 	fmt.Println(body.Username)
 	fmt.Println(body.Password)
 	fmt.Println("=============================")
-	
+
     err := c.BindJSON(&body)
     if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{
@@ -105,6 +105,9 @@ func Login(c *gin.Context) {
             // "token": token,
         },
     })
+	fmt.Println("=============================::::::::::::::::::::")
+	fmt.Println(Users[0].Username)
+	fmt.Println(Users[0].Name)
 
 	return;
 }
