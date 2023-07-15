@@ -42,8 +42,19 @@ func DeletePerusahaan(c *gin.Context) {
     // retrieve perusahaan ID from request
     perusahaanID := c.Param("id")
 
+    // delete all barang from perusahaan
+    result := initializers.DB.Where("perusahaan_id = ?", perusahaanID).Delete(&model.Barang{})
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "error",
+            "message": "Failed to delete barang",
+            "data":    nil,
+        })
+        return
+    }
+
     // delete perusahaan from database
-    result := initializers.DB.Delete(&model.Perusahaan{}, perusahaanID)
+    result = initializers.DB.Delete(&model.Perusahaan{}, perusahaanID)
     if result.RowsAffected == 0 {
         c.JSON(http.StatusNotFound, gin.H{
             "status":  "error",
