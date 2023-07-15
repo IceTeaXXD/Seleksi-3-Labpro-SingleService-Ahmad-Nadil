@@ -3,10 +3,8 @@ package controllers
 import (
 	"singleservice/initializers"
 	model "singleservice/models"
-	// "singleservice/auth"
+	"singleservice/auth"
 	"net/http"
-	"github.com/dgrijalva/jwt-go"
-	"time"
 	"github.com/gin-gonic/gin"
 	// "fmt"
 )
@@ -26,23 +24,6 @@ type LoginResponse struct {
 		} `json:"user"`
 		Token string `json:"token"`
 	} `json:"data"`
-}
-
-func generateToken(username string) string {
-	// Create the claims containing user information
-	claims := jwt.MapClaims{
-		"username": username,
-		"exp":      time.Now().Add(time.Hour * 24).Unix(), // Token expiration time
-	}
-
-	// Generate the JWT token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Sign the token with a secret key
-	secretKey := []byte("your-secret-key") // Replace with your own secret key
-	tokenString, _ := token.SignedString(secretKey)
-
-	return tokenString
 }
 
 func Login(c *gin.Context) {
@@ -76,16 +57,15 @@ func Login(c *gin.Context) {
 	}
 
     // generate JWT token
-    // token, err := auth.GenerateToken(Users[0].ID)
-    // if err != nil {
-    //     c.JSON(http.StatusInternalServerError, gin.H{
-    //         "status":  "error",
-    //         "message": "Failed to generate token",
-    //         "data":    nil,
-    //     })
-    //     return
-    // }
-
+    token, err := auth.GenerateToken(Users[0].ID)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "error",
+            "message": "Failed to generate token",
+            "data":    nil,
+        })
+        return
+    }
     // return user data and token
     c.JSON(http.StatusOK, gin.H{
         "status":  "success",
@@ -95,7 +75,7 @@ func Login(c *gin.Context) {
                 "username": Users[0].Username,
                 "name":     Users[0].Name,
             },
-            "token": "asdasd",
+            "token": token,
         },
     })
 	return;
