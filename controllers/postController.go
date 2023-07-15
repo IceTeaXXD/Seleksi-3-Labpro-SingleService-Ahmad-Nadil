@@ -95,7 +95,7 @@ func Login(c *gin.Context) {
                 "username": Users[0].Username,
                 "name":     Users[0].Name,
             },
-            // "token": token,
+            "token": "asdasd",
         },
     })
 	return;
