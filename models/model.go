@@ -18,7 +18,7 @@ type Perusahaan struct {
 	Alamat    		string 		`gorm:"not null" json:"alamat"`
 	NoTelepon 		string 		`gorm:"not null" json:"no_telp"`
 	KodePajak 		string 		`gorm:"unique;not null" json:"kode"`
-	Barang   		[]Barang 	`gorm:"foreignKey:PerusahaanID" json:"barang"`
+	Barang   		[]Barang 	`gorm:"foreignKey:PerusahaanID;constraint:OnDelete:CASCADE;" json:"barang"`
 }
 
 type Barang struct {
