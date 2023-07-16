@@ -27,6 +27,7 @@ func main() {
 	r.POST("/barang", controllers.CreateBarang)
 	r.POST("/perusahaan", controllers.CreatePerusahaan)
 	r.POST("/register", controllers.Register)
+	r.POST("/transaksi", controllers.CreateTransaksi)
 	
 	// GET
 	r.GET("/self", controllers.GetSelf)
@@ -34,6 +35,7 @@ func main() {
 	r.GET("/barang/:id", controllers.GetBarangByID)
 	r.GET("/perusahaan", controllers.GetPerusahaan)
 	r.GET("/perusahaan/:id", controllers.GetPerusahaanByID)
+	r.GET("/transaksi/:id", controllers.GetTransaksiByID)
 	
 	// DELETE
 	r.DELETE("/barang/:id", controllers.DeleteBarang)

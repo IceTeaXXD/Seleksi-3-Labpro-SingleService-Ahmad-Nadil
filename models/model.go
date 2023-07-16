@@ -30,3 +30,9 @@ type Barang struct {
 	PerusahaanID 	string   	`gorm:"not null" json:"perusahaan_id"`
 }
 
+type Transaksi struct {
+	ID           	uint   		`gorm:"primaryKey" json:"id"`
+	IDPembeli    	uint   		`gorm:"not null" json:"id_pembeli"`
+	NamaBarang   	string 		`gorm:"not null" json:"nama_barang"`
+	TotalHarga		int			`gorm:"not null;check:total_harga > 0" json:"total_harga"`
+}

@@ -211,3 +211,53 @@ func CreatePerusahaan(c *gin.Context) {
         "data":    data,
     })
 }
+
+func CreateTransaksi(c *gin.Context){
+    var requestBody struct {
+        IDPembeli     uint   `json:"id_pembeli"`
+        NamaBarang    string `json:"nama_barang"`
+        TotalHarga    int    `json:"total_harga"`
+    }
+
+    err := c.BindJSON(&requestBody)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "status":  "error",
+            "message": "Invalid request body",
+            "data":    nil,
+        })
+        return
+    }
+
+    // create new transaksi in database
+    newTransaksi := model.Transaksi{
+        IDPembeli:     requestBody.IDPembeli,
+        NamaBarang:    requestBody.NamaBarang,
+        TotalHarga:    requestBody.TotalHarga,
+    }
+
+    result := initializers.DB.Create(&newTransaksi)
+
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "error",
+            "message": "Failed to create transaksi",
+            "data":    nil,
+        })
+        return
+    }
+
+    // return created transaksi data
+    data := gin.H{
+        "id":           newTransaksi.ID,
+        "id_pembeli":   newTransaksi.IDPembeli,
+        "nama_barang":  newTransaksi.NamaBarang,
+        "total_harga":  newTransaksi.TotalHarga,
+    }
+
+    c.JSON(http.StatusOK, gin.H{
+        "status":  "success",
+        "message": "Transaksi created successfully",
+        "data":    data,
+    })
+}

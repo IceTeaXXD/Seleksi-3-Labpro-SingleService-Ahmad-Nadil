@@ -182,3 +182,35 @@ func GetPerusahaanByID(c *gin.Context) {
         "data":    data,
     })
 }
+
+func GetTransaksiByID(c *gin.Context) {
+    // get id_pembeli from request parameters
+    id_pembeli := c.Param("id")
+
+    var transactions []model.Transaksi
+    result := initializers.DB.Where("id_pembeli = ?", id_pembeli).Find(&transactions)
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "error",
+            "message": "Failed to retrieve transaksi",
+            "data":    nil,
+        })
+        return
+    }
+
+    // return transaksi data
+    var data []gin.H
+    for _, transaction := range transactions {
+        data = append(data, gin.H{
+            "id":            transaction.ID,
+            "id_pembeli":    transaction.IDPembeli,
+            "nama_barang":   transaction.NamaBarang,
+            "total_harga":   transaction.TotalHarga,
+        })
+    }
+    c.JSON(http.StatusOK, gin.H{
+        "status":  "success",
+        "message": "Transactions retrieved successfully",
+        "data":    data,
+    })
+}
