@@ -81,6 +81,53 @@ func Login(c *gin.Context) {
 	return;
 }
 
+func Register(c *gin.Context) {
+    // get username and password from request body
+    var body struct {
+        Username    string `json:"username"`
+        Password    string `json:"password"`
+        Name        string `json:"name"`
+    }
+
+    err := c.BindJSON(&body)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "status":  "error",
+            "message": "Invalid request body",
+            "data":    nil,
+        })
+        return
+    }
+
+    // create new user in database
+    newUser := model.User{
+        Username: body.Username,
+        Password: body.Password,
+        Name:     body.Name,
+    }
+    result := initializers.DB.Create(&newUser)
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "error",
+            "message": "Failed to create user",
+            "data":    nil,
+        })
+        return
+    }
+
+    // return created user data
+    data := gin.H{
+        "id":       newUser.ID,
+        "username": newUser.Username,
+        "name":     newUser.Name,
+    }
+    c.JSON(http.StatusOK, gin.H{
+        "status":  "success",
+        "message": "User created successfully",
+        "data":    data,
+    })
+}
+
 func CreateBarang(c *gin.Context) {
     // parse request body
     var requestBody struct {
