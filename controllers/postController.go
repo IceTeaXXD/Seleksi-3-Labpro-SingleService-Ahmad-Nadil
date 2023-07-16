@@ -9,23 +9,6 @@ import (
 	// "fmt"
 )
 
-type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type LoginResponse struct {
-	Status  string `json:"status"`
-	Message string `json:"message"`
-	Data    struct {
-		User  struct {
-			Username string `json:"username"`
-			Name     string `json:"name"`
-		} `json:"user"`
-		Token string `json:"token"`
-	} `json:"data"`
-}
-
 func Login(c *gin.Context) {
     // get username and password from request body
     var body struct {
