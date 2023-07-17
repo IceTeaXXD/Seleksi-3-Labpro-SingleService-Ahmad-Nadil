@@ -6,6 +6,7 @@ import (
 	// "singleservice/auth"
 	"net/http"
 	"github.com/gin-gonic/gin"
+    "fmt"
 )
 
 func GetSelf(c *gin.Context) {
@@ -183,16 +184,17 @@ func GetPerusahaanByID(c *gin.Context) {
     })
 }
 
-func GetTransaksiByID(c *gin.Context) {
+func GetTransaksiByUser(c *gin.Context) {
     // get id_pembeli from request parameters
-    id_pembeli := c.Param("id")
+    user_pembeli := c.Param("username")
+    fmt.Println(user_pembeli)
 
     var transactions []model.Transaksi
-    result := initializers.DB.Where("id_pembeli = ?", id_pembeli).Find(&transactions)
+    result := initializers.DB.Where("user_pembeli = ?", user_pembeli).Find(&transactions)
     if result.Error != nil {
         c.JSON(http.StatusInternalServerError, gin.H{
             "status":  "error",
-            "message": "Failed to retrieve transaksi",
+            "message": "Failed to retrieve transactions",
             "data":    nil,
         })
         return
@@ -203,8 +205,9 @@ func GetTransaksiByID(c *gin.Context) {
     for _, transaction := range transactions {
         data = append(data, gin.H{
             "id":            transaction.ID,
-            "id_pembeli":    transaction.IDPembeli,
+            "user_pembeli":  transaction.UserPembeli,
             "nama_barang":   transaction.NamaBarang,
+            "jumlah_barang": transaction.JumlahBarang,
             "total_harga":   transaction.TotalHarga,
         })
     }

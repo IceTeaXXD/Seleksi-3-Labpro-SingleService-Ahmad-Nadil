@@ -35,7 +35,7 @@ func main() {
 	r.GET("/barang/:id", controllers.GetBarangByID)
 	r.GET("/perusahaan", controllers.GetPerusahaan)
 	r.GET("/perusahaan/:id", controllers.GetPerusahaanByID)
-	r.GET("/transaksi/:id", controllers.GetTransaksiByID)
+	r.GET("/transaksi/:username", controllers.GetTransaksiByUser)
 	
 	// DELETE
 	r.DELETE("/barang/:id", controllers.DeleteBarang)

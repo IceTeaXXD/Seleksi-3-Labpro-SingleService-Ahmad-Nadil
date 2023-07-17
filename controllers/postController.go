@@ -214,8 +214,9 @@ func CreatePerusahaan(c *gin.Context) {
 
 func CreateTransaksi(c *gin.Context){
     var requestBody struct {
-        IDPembeli     uint   `json:"id_pembeli"`
+        UserPembeli   string `json:"user_pembeli"`
         NamaBarang    string `json:"nama_barang"`
+        JumlahBarang  int    `json:"jumlah_barang"`
         TotalHarga    int    `json:"total_harga"`
     }
 
@@ -231,8 +232,9 @@ func CreateTransaksi(c *gin.Context){
 
     // create new transaksi in database
     newTransaksi := model.Transaksi{
-        IDPembeli:     requestBody.IDPembeli,
+        UserPembeli:   requestBody.UserPembeli,
         NamaBarang:    requestBody.NamaBarang,
+        JumlahBarang:  requestBody.JumlahBarang,
         TotalHarga:    requestBody.TotalHarga,
     }
 
@@ -247,11 +249,35 @@ func CreateTransaksi(c *gin.Context){
         return
     }
 
+    // from barang, reduce stok
+    var barang model.Barang
+    result = initializers.DB.Where("nama = ?", newTransaksi.NamaBarang).First(&barang)
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "error",
+            "message": "Failed to retrieve barang",
+            "data":    nil,
+        })
+        return
+    }
+
+    barang.Stok = barang.Stok - newTransaksi.JumlahBarang
+    result = initializers.DB.Save(&barang)
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "error",
+            "message": "Failed to update barang",
+            "data":    nil,
+        })
+        return
+    }
+
     // return created transaksi data
     data := gin.H{
         "id":           newTransaksi.ID,
-        "id_pembeli":   newTransaksi.IDPembeli,
+        "id_pembeli":   newTransaksi.UserPembeli,
         "nama_barang":  newTransaksi.NamaBarang,
+        "jumlah_barang":  newTransaksi.JumlahBarang,
         "total_harga":  newTransaksi.TotalHarga,
     }
 
