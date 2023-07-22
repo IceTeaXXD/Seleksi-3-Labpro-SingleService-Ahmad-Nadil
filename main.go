@@ -3,8 +3,10 @@ package main
 import (
 	"singleservice/controllers"
 	"singleservice/initializers"
+	"singleservice/auth"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	// "fmt"
 )
 
 func init() {
@@ -22,30 +24,26 @@ func main() {
 		AllowHeaders: []string{"Origin", "Content-Type", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods", "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers", "Accept", "Accept-Encoding", "Content-Length", "X-CSRF-Token", "Authorization"},
 	}))
 
-	// POST
-	r.POST("/login", controllers.Login)
-	r.POST("/barang", controllers.CreateBarang)
-	r.POST("/perusahaan", controllers.CreatePerusahaan)
-	r.POST("/register", controllers.Register)
-	r.POST("/transaksi", controllers.CreateTransaksi)
-	
-	// GET
-	r.GET("/self", controllers.GetSelf)
-	r.GET("/barang", controllers.GetBarang)
-	r.GET("/barang/:id", controllers.GetBarangByID)
-	r.GET("/perusahaan", controllers.GetPerusahaan)
-	r.GET("/perusahaan/:id", controllers.GetPerusahaanByID)
-	r.GET("/transaksi/:username", controllers.GetTransaksiByUser)
-	
-	// DELETE
-	r.DELETE("/barang/:id", controllers.DeleteBarang)
-	r.DELETE("/perusahaan/:id", controllers.DeletePerusahaan)
-	
-	// PUT
-	r.PUT("/barang/:id", controllers.UpdateBarang)
-	r.PUT("/perusahaan/:id", controllers.UpdatePerusahaan)
+	authorized := r.Group("/")
+	authorized.Use(auth.AuthMiddleware())
+	{
+		authorized.GET("/self", controllers.GetSelf)
+		authorized.GET("/barang", controllers.GetBarang)
+		authorized.GET("/barang/:id", controllers.GetBarangByID)
+		authorized.GET("/perusahaan", controllers.GetPerusahaan)
+		authorized.GET("/perusahaan/:id", controllers.GetPerusahaanByID)
+		authorized.GET("/transaksi/:username", controllers.GetTransaksiByUser)
+		authorized.POST("/barang", controllers.CreateBarang)
+		authorized.POST("/perusahaan", controllers.CreatePerusahaan)
+		authorized.POST("/transaksi", controllers.CreateTransaksi)
+		authorized.DELETE("/barang/:id", controllers.DeleteBarang)
+		authorized.DELETE("/perusahaan/:id", controllers.DeletePerusahaan)
+		authorized.PUT("/barang/:id", controllers.UpdateBarang)
+		authorized.PUT("/perusahaan/:id", controllers.UpdatePerusahaan)
+	}
 
-	// OPTIONS
+	r.POST("/login", controllers.Login)
+	r.POST("/register", controllers.Register)
 	r.OPTIONS("/login", controllers.LoginOptions)
 
 	r.Run()

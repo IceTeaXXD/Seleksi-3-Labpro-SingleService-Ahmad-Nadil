@@ -6,7 +6,7 @@ import (
 	"singleservice/auth"
 	"net/http"
 	"github.com/gin-gonic/gin"
-	// "fmt"
+    // "fmt"
 )
 
 func Login(c *gin.Context) {
@@ -49,6 +49,11 @@ func Login(c *gin.Context) {
         })
         return
     }
+
+    // add authentication token to response header
+    c.Header("Authorization", "Bearer "+token)
+    // fmt.Println("token: ", token)
+
     // return user data and token
     c.JSON(http.StatusOK, gin.H{
         "status":  "success",
@@ -58,9 +63,10 @@ func Login(c *gin.Context) {
                 "username": Users[0].Username,
                 "name":     Users[0].Name,
             },
-            "token": token,
+            "token": "Bearer "+token,
         },
     })
+
 	return;
 }
 
