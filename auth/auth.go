@@ -3,26 +3,26 @@ package auth
 import (
 	"github.com/dgrijalva/jwt-go"
 	"time"
-    // "fmt"
-    "net/http"
-    "github.com/gin-gonic/gin"
-    "strings"
+	// "fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strings"
 )
 
 func GenerateToken(userID uint) (string, error) {
-    // create a new token object
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-        "user_id": userID,
-        "exp":     time.Now().Add(time.Hour * 24).Unix(),
-    })
+	// create a new token object
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": userID,
+		"exp":     time.Now().Add(time.Hour * 24).Unix(),
+	})
 
-    // sign the token with the secret key
-    tokenString, err := token.SignedString([]byte("mysecretkey"))
-    if err != nil {
-        return "", err
-    }
+	// sign the token with the secret key
+	tokenString, err := token.SignedString([]byte("mysecretkey"))
+	if err != nil {
+		return "", err
+	}
 
-    return tokenString, nil
+	return tokenString, nil
 }
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -38,7 +38,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token 1"})
 			return
 		}
-		
+
 		tokenString = tokenParts[1]
 
 		claims := &jwt.StandardClaims{}

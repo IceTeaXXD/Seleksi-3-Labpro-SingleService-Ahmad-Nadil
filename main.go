@@ -1,11 +1,11 @@
 package main
 
 import (
-	"singleservice/controllers"
-	"singleservice/initializers"
-	"singleservice/auth"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"singleservice/auth"
+	"singleservice/controllers"
+	"singleservice/initializers"
 	// "fmt"
 )
 
@@ -19,7 +19,7 @@ func main() {
 
 	// Add CORS middleware
 	r.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000", "https://ohl-fe.vercel.app","http://localhost:5173","https://monolith-labpro.up.railway.app/"},
+		AllowOrigins: []string{"http://localhost:3000", "https://ohl-fe.vercel.app", "http://localhost:5173", "https://monolith-labpro.up.railway.app/"},
 		AllowMethods: []string{"GET", "POST", "DELETE", "PUT", "OPTIONS"},
 		AllowHeaders: []string{"Origin", "Content-Type", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods", "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers", "Accept", "Accept-Encoding", "Content-Length", "X-CSRF-Token", "Authorization"},
 	}))
