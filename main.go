@@ -28,8 +28,6 @@ func main() {
 	authorized.Use(auth.AuthMiddleware())
 	{
 		authorized.GET("/self", controllers.GetSelf)
-		authorized.GET("/barang", controllers.GetBarang)
-		authorized.GET("/barang/:id", controllers.GetBarangByID)
 		authorized.GET("/perusahaan", controllers.GetPerusahaan)
 		authorized.GET("/perusahaan/:id", controllers.GetPerusahaanByID)
 		authorized.GET("/transaksi/:username", controllers.GetTransaksiByUser)
