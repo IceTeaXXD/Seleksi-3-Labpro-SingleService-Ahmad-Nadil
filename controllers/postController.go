@@ -291,3 +291,48 @@ func CreateTransaksi(c *gin.Context) {
 		"data":    data,
 	})
 }
+
+func BuyBarang(c *gin.Context) {
+	var requestBody struct {
+		IDBarang   	 string `json:"id_barang"`
+		JumlahBarang int    `json:"jumlah_barang"`
+	}
+
+	err := c.BindJSON(&requestBody)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": "Invalid request body",
+			"data":    nil,
+		})
+		return
+	}
+
+	// from barang, reduce stok
+	var barang model.Barang
+	result := initializers.DB.Where("id = ?", requestBody.IDBarang).First(&barang)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  "error",
+			"message": "Failed to retrieve barang",
+			"data":    nil,
+		})
+		return
+	}
+
+	barang.Stok = barang.Stok - requestBody.JumlahBarang
+	result = initializers.DB.Save(&barang)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  "error",
+			"message": "Failed to update barang",
+			"data":    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"message": "Barang berhasil dibeli",
+	})
+}

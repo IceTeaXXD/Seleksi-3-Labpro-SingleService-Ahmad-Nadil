@@ -42,6 +42,7 @@ func main() {
 
 	r.POST("/login", controllers.Login)
 	r.POST("/register", controllers.Register)
+	r.POST("/buy", controllers.BuyBarang);
 	r.GET("/barang", controllers.GetBarang)
 	r.GET("/barang/:id", controllers.GetBarangByID)
 	r.OPTIONS("/login", controllers.LoginOptions)
