@@ -6,7 +6,7 @@ import (
 	"singleservice/auth"
 	"singleservice/initializers"
 	model "singleservice/models"
-	// "fmt"
+	"fmt"
 )
 
 func Login(c *gin.Context) {
@@ -298,6 +298,9 @@ func BuyBarang(c *gin.Context) {
 		JumlahBarang int    `json:"jumlah_barang"`
 	}
 
+	// print the json body
+	fmt.Println(c.Request.Body)
+
 	err := c.BindJSON(&requestBody)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -331,8 +334,18 @@ func BuyBarang(c *gin.Context) {
 		return
 	}
 
+	data := gin.H{
+		"id":            barang.ID,
+		"nama":          barang.Nama,
+		"harga":         barang.Harga,
+		"stok":          barang.Stok,
+		"kode":          barang.KodeBarang,
+		"perusahaan_id": barang.PerusahaanID,
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",
 		"message": "Barang berhasil dibeli",
+		"data":    data,
 	})
 }
