@@ -9,6 +9,7 @@ COPY . .
 
 # Build the Go application inside the container
 RUN go build -o singleservice .
+# RUN go run migrate/migrate.go
 
 # Expose the port on which your application listens
 # EXPOSE 8080
