@@ -39,11 +39,14 @@ localhost:8080
 ```
 
 ## Design Pattern yang Digunakan
-### 1. 
+### 1. Singleton Pattern
+Singleton pattern digunakan untuk membuat koneksi ke database. Koneksi ke database hanya perlu dibuat sekali saja dan disimpan dalam variabel static sehingga dapat digunakan oleh class lain tanpa perlu membuat koneksi baru.
 
-### 2. 
+### 2. Model-View-Controller (MVC) Pattern
+MVC pattern digunakan untuk memisahkan antara logic, view, dan model. Logic diletakkan di dalam folder controller, digunakan untuk operasi CRUD. Untuk view karena aplikasi ini adalah aplikasi backend, hanya berupa routing yang menampilkan data dari controller, hal ini terdapat pada main.go. Sedangkan model digunakan untuk membuat model dari data yang ada di database, hal ini terdapat pada folder model. Ketiga bagian ini dipisahkan agar aplikasi dapat dikembangkan dengan mudah.
 
-### 3. 
+### 3. Repository Pattern
+Repository pattern digunakan untuk memisahkan antara logic dan data. Logic diletakkan di dalam folder controller, digunakan untuk operasi CRUD. Sedangkan data diletakkan di dalam folder database, digunakan untuk membuat model dari data yang ada di database.
 
 ## Technology Stack yang Digunakan
 - Go version 1.20.3
