@@ -38,6 +38,12 @@ docker-compose up
 localhost:8080
 ```
 
+### Admin Account
+```
+Username : admin
+Password : admin
+```
+
 ## Design Pattern yang Digunakan
 ### 1. Singleton Pattern
 Singleton pattern digunakan untuk membuat koneksi ke database. Koneksi ke database hanya perlu dibuat sekali saja dan disimpan dalam variabel static sehingga dapat digunakan oleh class lain tanpa perlu membuat koneksi baru.
